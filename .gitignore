@@ -1,16 +1,25 @@
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+.Python
 venv/
-.ipynb_checkpoints
+ENV/
+env/
 
-# Data files (too large)
+# Jupyter
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# Data files (large - don't upload to GitHub)
 data/raw/*.sas7bdat
 data/raw/*.csv
-data/processed/*.csv
+data/raw/*.zip
 
-# Keep processed pickle (smaller)
-# data/processed/*.pkl
+# Keep processed pickle files
+# data/processed/*.pkl is okay to include if <100MB
 
 # OS
 .DS_Store
+Thumbs.db
