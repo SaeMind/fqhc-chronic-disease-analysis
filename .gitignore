@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.ipynb_checkpoints
+
+# Data files (too large)
+data/raw/*.sas7bdat
+data/raw/*.csv
+data/processed/*.csv
+
+# Keep processed pickle (smaller)
+# data/processed/*.pkl
+
+# OS
+.DS_Store

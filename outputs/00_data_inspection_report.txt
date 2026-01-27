@@ -1,0 +1,31 @@
+NAMCS HC 2024 Data Inspection Report
+================================================================================
+
+Dataset Shape: (503799, 75)
+Records: 503,799
+Variables: 75
+
+Columns: ['DAY', 'MONTH', 'HCID_S', 'PUF_ID', 'MARITAL', 'AGE', 'AGE_GROUP', 'AGE_U1_MONTH', 'ETHNICITY', 'RACE', 'RACERETH', 'SEX', 'DX1', 'DX2', 'DX3', 'DX4', 'DX5', 'DX6', 'DX7', 'DX8', 'DX9', 'DX10', 'DX11', 'DX12', 'DX13', 'DX14', 'DX15', 'DX16', 'DX17', 'DX18', 'DX19', 'DX20', 'DX21', 'DX22', 'DX23', 'DX24', 'DX25', 'DX26', 'DX27', 'DX28', 'DX29', 'DX30', 'DX_TYPE1', 'DX_TYPE2', 'DX_TYPE3', 'DX_TYPE4', 'DX_TYPE5', 'DX_TYPE6', 'DX_TYPE7', 'DX_TYPE8', 'DX_TYPE9', 'DX_TYPE10', 'DX_TYPE11', 'DX_TYPE12', 'DX_TYPE13', 'DX_TYPE14', 'DX_TYPE15', 'DX_TYPE16', 'DX_TYPE17', 'DX_TYPE18', 'DX_TYPE19', 'DX_TYPE20', 'DX_TYPE21', 'DX_TYPE22', 'DX_TYPE23', 'DX_TYPE24', 'DX_TYPE25', 'DX_TYPE26', 'DX_TYPE27', 'DX_TYPE28', 'DX_TYPE29', 'DX_TYPE30', 'VISWT', 'STRATUM_S', 'YEAR']
+
+Top 20 Missing Data:
+              Column  Missing_Count  Missing_Percent
+DAY              DAY              0              0.0
+DX_TYPE15  DX_TYPE15              0              0.0
+DX_TYPE13  DX_TYPE13              0              0.0
+DX_TYPE12  DX_TYPE12              0              0.0
+DX_TYPE11  DX_TYPE11              0              0.0
+DX_TYPE10  DX_TYPE10              0              0.0
+DX_TYPE9    DX_TYPE9              0              0.0
+DX_TYPE8    DX_TYPE8              0              0.0
+DX_TYPE7    DX_TYPE7              0              0.0
+DX_TYPE6    DX_TYPE6              0              0.0
+DX_TYPE5    DX_TYPE5              0              0.0
+DX_TYPE4    DX_TYPE4              0              0.0
+DX_TYPE3    DX_TYPE3              0              0.0
+DX_TYPE2    DX_TYPE2              0              0.0
+DX_TYPE1    DX_TYPE1              0              0.0
+DX30            DX30              0              0.0
+DX29            DX29              0              0.0
+DX_TYPE14  DX_TYPE14              0              0.0
+DX_TYPE16  DX_TYPE16              0              0.0
+DX27            DX27              0              0.0
