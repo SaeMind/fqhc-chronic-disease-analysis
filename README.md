@@ -1,18 +1,18 @@
 # Federally Qualified Health Center (FQHC) Chronic Disease Management Analysis
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-1.0+-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.0+-orange.svg)](https://scikit-learn.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## Executive Summary
 
 This project analyzes 503,799 health center visits from the CDC's 2024 National Ambulatory Medical Care Survey (NAMCS) Health Center Component to develop predictive models for chronic disease management and quantify opportunities for improving population health outcomes at Federally Qualified Health Centers (FQHCs).
 
 **Key Findings:**
-- 🎯 **Hypertension Prediction:** 0.927 AUC-ROC, 61.6% F1-score
-- 🎯 **Multimorbidity Prediction:** 0.934 AUC-ROC, 70.9% F1-score  
-- 🎯 **High Complexity Visits:** 0.835 AUC-ROC, 72.6% F1-score
-- 💰 **National Savings Potential:** $11.7 billion through three evidence-based intervention programs
+- **Hypertension Prediction:** 0.927 AUC-ROC, 61.6% F1-score
+- **Multimorbidity Prediction:** 0.934 AUC-ROC, 70.9% F1-score
+- **High Complexity Visits:** 0.835 AUC-ROC, 72.6% F1-score
+- **National Savings Potential:** $11.7 billion through three evidence-based intervention programs
 
 ---
 
@@ -32,6 +32,7 @@ This analysis demonstrates how machine learning can optimize resource allocation
 ## Data Source
 
 **CDC National Ambulatory Medical Care Survey (NAMCS) Health Center Component 2024**
+
 - **URL:** https://www.cdc.gov/nchs/namcs/
 - **Survey Design:** Nationally representative sample of 107 FQHCs
 - **Sample Size:** 503,799 visits (weighted to 123,817,677 national visits)
@@ -45,25 +46,29 @@ This analysis demonstrates how machine learning can optimize resource allocation
 ### Models Developed
 
 | Model | Algorithm | F1 Score | AUC-ROC | Business Application |
-|-------|-----------|----------|---------|---------------------|
+|---|---|---|---|---|
 | **Hypertension Classifier** | Random Forest | 0.616 | 0.927 | Blood pressure management programs |
 | **Mental Health Classifier** | Random Forest | 0.444 | 0.853 | Integrated behavioral health screening |
 | **Diabetes Classifier** | Random Forest | 0.126* | 0.884 | Early intervention targeting |
 | **High Complexity Predictor** | Gradient Boosting | 0.726 | 0.835 | Resource allocation planning |
 | **Multimorbidity Predictor** | Logistic Regression | 0.709 | 0.934 | Care coordination priority |
 
-*Low F1 due to class imbalance (10% prevalence), but high AUC shows strong discrimination
+*Low F1 due to class imbalance (10% prevalence); high AUC confirms strong discrimination capability
 
 ### Tech Stack
-- **Python 3.9+**
-- **Data Processing:** pandas, numpy
-- **Machine Learning:** scikit-learn (Random Forest, Gradient Boosting, Logistic Regression)
-- **Visualization:** matplotlib, seaborn
-- **Survey Analysis:** Complex sampling weights (VISWT, STRATUM_S, HCID_S)
+
+| Category | Tools |
+|---|---|
+| **Language** | Python 3.9+ |
+| **Data Processing** | pandas, numpy |
+| **Machine Learning** | scikit-learn (Random Forest, Gradient Boosting, Logistic Regression) |
+| **Visualization** | matplotlib, seaborn |
+| **Survey Analysis** | Complex sampling weights (VISWT, STRATUM_S, HCID_S) |
 
 ---
 
 ## Project Structure
+
 ```
 fqhc-chronic-disease-analysis/
 ├── data/
@@ -78,7 +83,7 @@ fqhc-chronic-disease-analysis/
 ├── models/                        # Trained model artifacts (.pkl)
 ├── figures/                       # Visualizations (PNG, 300 DPI)
 ├── outputs/                       # Summary tables, reports (CSV)
-├── docs/                          # Documentation
+├── PORTFOLIO_BRIEF.md             # Executive case study summary
 ├── requirements.txt
 └── README.md
 ```
@@ -90,7 +95,7 @@ fqhc-chronic-disease-analysis/
 ### Chronic Disease Prevalence
 
 | Condition | Visits | Prevalence | National Impact |
-|-----------|--------|------------|-----------------|
+|---|---|---|---|
 | Mental Health Disorders | 92,453 | 18.4% | 22.7M visits |
 | Hypertension | 77,716 | 15.4% | 19.1M visits |
 | Obesity | 63,477 | 12.6% | 15.6M visits |
@@ -99,6 +104,7 @@ fqhc-chronic-disease-analysis/
 ### Health Equity Findings
 
 Significant racial/ethnic disparities identified:
+
 - **Hypertension:** Higher rates in Black patients (rate ratio: 1.3x vs White)
 - **Diabetes:** Higher rates in Hispanic patients (rate ratio: 1.4x vs White)
 - **Mental Health:** Lower diagnosis rates in Black/Hispanic patients despite similar prevalence in national studies
@@ -106,7 +112,7 @@ Significant racial/ethnic disparities identified:
 ### Financial Impact (National FQHC Sector)
 
 | Intervention Program | Investment | Net Savings | ROI |
-|---------------------|------------|-------------|-----|
+|---|---|---|---|
 | Diabetes Early Intervention | $1.9B | $7.3B | 3.80x |
 | Hypertension Control | $1.4B | $3.4B | 2.36x |
 | Integrated Mental Health | $4.5B | $1.0B | 0.22x |
@@ -115,9 +121,10 @@ Significant racial/ethnic disparities identified:
 ---
 
 ## Installation & Usage
+
 ```bash
 # Clone repository
-git clone https://github.com/[your-username]/fqhc-chronic-disease-analysis.git
+git clone https://github.com/SaeMind/fqhc-chronic-disease-analysis.git
 cd fqhc-chronic-disease-analysis
 
 # Create virtual environment
@@ -132,7 +139,7 @@ pip install -r requirements.txt
 jupyter notebook notebooks/
 ```
 
-**Note:** Raw NAMCS data files are not included in repository due to size. Download from CDC website.
+**Note:** Raw NAMCS data files are not included due to size. Download from the CDC website linked above.
 
 ---
 
@@ -154,19 +161,22 @@ jupyter notebook notebooks/
 
 ## Future Enhancements
 
-1. **Temporal Analysis:** Analyze trends across multiple survey years (2021-2024)
-2. **Geographic Variation:** Link to census data for social determinants of health
-3. **Prescription Patterns:** Integrate medication data for treatment adherence analysis
-4. **Cost-Effectiveness:** Detailed cost-utility analysis (QALYs) for each intervention
-5. **Real-Time Deployment:** API for risk prediction in EHR systems
+1. Temporal Analysis: Analyze trends across multiple survey years (2021–2024)
+2. Geographic Variation: Link to census data for social determinants of health
+3. Prescription Patterns: Integrate medication data for treatment adherence analysis
+4. Cost-Effectiveness: Detailed cost-utility analysis (QALYs) for each intervention
+5. Real-Time Deployment: API for risk prediction in EHR systems
 
 ---
 
-## Author
+## Contact
 
-**Andrew Lee**  
-Clinical Data Science | Healthcare Analytics | Biomedical Informatics  
-[LinkedIn](#) | [Portfolio](#) | andrew.lee@email.com
+**Andrew Lee**
+Clinical Data Science | Healthcare Analytics | Biomedical Informatics
+
+- [LinkedIn](https://www.linkedin.com/in/agllee)
+- [Portfolio](https://andrew-gihbeom-lee.figma.site/)
+- [Email](mailto:gihbeom@gmail.com)
 
 ---
 
@@ -180,21 +190,25 @@ Clinical Data Science | Healthcare Analytics | Biomedical Informatics
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License — see LICENSE file for details
 
 ---
 
 ## Citation
 
-If using this analysis, please cite:
 ```
-Lee, A. (2026). Federally Qualified Health Center Chronic Disease Management Analysis. 
-GitHub repository: https://github.com/[username]/fqhc-chronic-disease-analysis
+Lee, A. (2026). Federally Qualified Health Center Chronic Disease Management Analysis.
+GitHub repository: https://github.com/SaeMind/fqhc-chronic-disease-analysis
 ```
 
 **Data Citation:**
 ```
-National Center for Health Statistics. Division of Health Care Statistics. 2024 National 
-Ambulatory Medical Care Survey Health Center (NAMCS HC) Component public-use data file. 
+National Center for Health Statistics. Division of Health Care Statistics. 2024 National
+Ambulatory Medical Care Survey Health Center (NAMCS HC) Component public-use data file.
 2026. Hyattsville, Maryland. DOI: https://dx.doi.org/10.15620/cdc/174646.
 ```
+
+---
+
+**Project Status:** Complete
+**Last Updated:** March 2026
