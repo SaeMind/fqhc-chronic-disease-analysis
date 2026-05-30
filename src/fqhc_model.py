@@ -48,6 +48,41 @@ CONDITION_FEATURES = [f"has_{c}" for c in CHRONIC_CONDITIONS]
 
 ALL_FEATURES = DEMOGRAPHIC_FEATURES + CLINICAL_FEATURES + CONDITION_FEATURES
 
+
+def get_features_for_target(target_condition: str) -> List[str]:
+    """
+    Return feature list excluding the target condition flag and any
+    features directly derived from it (e.g. on_insulin leaks diabetes label).
+
+    Leakage exclusions per condition:
+      diabetes     → has_diabetes, on_insulin (prescribed for diabetes)
+      hypertension → has_hypertension, on_ace_arb (first-line HTN drug)
+      copd         → has_copd, on_inhaler (COPD/asthma inhaler use)
+      asthma       → has_asthma, on_inhaler
+      depression   → has_depression
+      ckd          → has_ckd
+      heart_failure→ has_heart_failure
+      obesity      → has_obesity
+
+    Also exclude n_chronic_conditions — it encodes the number of has_* flags
+    and leaks information about the target when target prevalence is non-trivial.
+    """
+    LEAKAGE_MAP = {
+        "diabetes":     ["has_diabetes",     "on_insulin"],
+        "hypertension": ["has_hypertension",  "on_ace_arb"],
+        "copd":         ["has_copd",          "on_inhaler"],
+        "asthma":       ["has_asthma",        "on_inhaler"],
+        "depression":   ["has_depression"],
+        "ckd":          ["has_ckd"],
+        "heart_failure":["has_heart_failure"],
+        "obesity":      ["has_obesity"],
+    }
+    exclude = set(LEAKAGE_MAP.get(target_condition, []))
+    exclude.add(f"has_{target_condition}")   # always exclude target flag
+    exclude.add("n_chronic_conditions")      # derived from all has_* flags
+
+    return [f for f in ALL_FEATURES if f not in exclude]
+
 RACE_ETH_GROUPS = [
     "Non-Hispanic White", "Non-Hispanic Black", "Hispanic",
     "Asian/Pacific Islander", "Other/Unknown"
@@ -202,7 +237,8 @@ def load_or_train_model(
     logger.info("Generating FQHC synthetic data (%s visits)...", f"{n_train:,}")
     df = generate_fqhc_data(n_visits=n_train)
 
-    feature_cols = [c for c in ALL_FEATURES if c in df.columns]
+    # Use leakage-safe feature set (excludes target flag + correlated medication flags)
+    feature_cols = [c for c in get_features_for_target(target_condition) if c in df.columns]
     target_col = f"has_{target_condition}"
 
     X = df[feature_cols].fillna(0)

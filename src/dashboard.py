@@ -129,7 +129,7 @@ def load_model_and_shap(target_condition: str = "diabetes", n_train: int = 20_00
 
 with st.sidebar:
     st.image("https://img.shields.io/badge/FQHC-Chronic%20Disease-4fc3f7?style=for-the-badge",
-             use_column_width=True)
+             use_container_width=True)
     st.markdown("## Settings")
 
     target_condition = st.selectbox(
