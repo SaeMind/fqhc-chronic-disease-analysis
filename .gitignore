@@ -23,3 +23,6 @@ data/raw/*.zip
 # OS
 .DS_Store
 Thumbs.db
+
+models/
+results/shap/shap_values.parquet

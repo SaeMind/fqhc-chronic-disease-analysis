@@ -212,3 +212,44 @@ Ambulatory Medical Care Survey Health Center (NAMCS HC) Component public-use dat
 
 **Project Status:** Complete
 **Last Updated:** March 2026
+
+---
+
+## SHAP Explainability + Streamlit Dashboard
+
+Added in Phase 1 upgrade. Provides global feature importance, per-patient
+waterfall explanations, equity analysis by race/ethnicity, and population
+risk stratification.
+
+### Launch Dashboard
+
+```bash
+pip install -r requirements.txt
+streamlit run src/dashboard.py
+```
+
+Dashboard pages:
+- **Overview** — Model metrics, top features, risk distribution
+- **Global SHAP** — Feature importance bar + beeswarm plots
+- **Patient Explorer** — Per-patient SHAP waterfall, risk tier
+- **Equity Analysis** — SHAP disparity by race/ethnicity heatmap
+- **Population Risk** — Risk tier breakdown, subgroup analysis
+
+### Run SHAP Analysis Only
+
+```python
+from src.fqhc_model import load_or_train_model
+from src.shap_analysis import SHAPAnalyzer
+
+model, X_train, X_test, y_train, y_test, feature_cols, demo_test = \
+    load_or_train_model(n_train=50000, target_condition="diabetes")
+
+analyzer = SHAPAnalyzer(model, X_train, X_test, feature_cols)
+summary = analyzer.run(output_dir="results/shap/", demographics_df=demo_test)
+```
+
+### Run Tests
+
+```bash
+python -m pytest tests/test_shap.py -v
+```
