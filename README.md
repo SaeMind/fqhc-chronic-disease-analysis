@@ -4,7 +4,7 @@
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.0+-orange.svg)](https://scikit-learn.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**[Live Dashboard Demo](#) — SHAP explainability dashboard for the 5 real trained models** *(add your Streamlit Community Cloud URL here after deploying)*
+**[Live Dashboard Demo](https://fqhc-chronic-disease-analysis-2qvyjrr5iu9roxbauhmvpq.streamlit.app/) — SHAP explainability dashboard for the 5 real trained models**
 
 ## Executive Summary
 
