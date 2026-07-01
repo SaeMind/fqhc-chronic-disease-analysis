@@ -1,8 +1,11 @@
 """
 FQHC Chronic Disease Prediction — SHAP Explainability Dashboard
 ================================================================
-Interactive Streamlit dashboard for exploring model predictions and
-SHAP explanations for the FQHC chronic disease XGBoost model.
+Interactive Streamlit dashboard for exploring predictions and SHAP
+explanations for the 5 real models trained on 503,799 NAMCS 2024 visits
+(notebooks/03_predictive_models.ipynb): RandomForest (hypertension,
+diabetes, mental health), GradientBoosting (high complexity), and
+LogisticRegression (multimorbidity).
 
 Pages:
   1. Overview       — Model performance, dataset statistics
@@ -24,6 +27,9 @@ from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -77,18 +83,14 @@ st.markdown("""
 # Cached data loading
 # ---------------------------------------------------------------------------
 
-@st.cache_resource(show_spinner="Loading model and computing SHAP values...")
-def load_model_and_shap(target_condition: str = "diabetes", n_train: int = 20_000):
-    """Load model + compute SHAP in one cached call."""
-    from fqhc_model import load_or_train_model
+@st.cache_resource(show_spinner="Loading real NAMCS-trained model and computing SHAP values...")
+def load_model_and_shap(target_condition: str = "hypertension"):
+    """Load real trained model + compute SHAP in one cached call."""
+    from fqhc_model import load_real_model
     from shap_analysis import SHAPAnalyzer
 
     model, X_train, X_test, y_train, y_test, feature_cols, demo_test = \
-        load_or_train_model(
-            model_path=f"models/fqhc_{target_condition}.pkl",
-            n_train=n_train,
-            target_condition=target_condition,
-        )
+        load_real_model(target_condition=target_condition)
 
     analyzer = SHAPAnalyzer(
         model=model,
@@ -134,16 +136,11 @@ with st.sidebar:
 
     target_condition = st.selectbox(
         "Target Condition",
-        options=["diabetes", "hypertension", "copd", "asthma", "depression",
-                 "ckd", "heart_failure", "obesity"],
+        options=["hypertension", "diabetes", "mental_health",
+                 "high_complexity", "multimorbidity"],
         index=0,
-    )
-
-    n_train = st.select_slider(
-        "Training Set Size",
-        options=[5_000, 10_000, 20_000, 50_000],
-        value=20_000,
-        help="Larger = more accurate model; slower to train",
+        help="One of the 5 models actually trained in notebooks/03_predictive_models.ipynb "
+             "on real NAMCS 2024 data (503,799 visits).",
     )
 
     page = st.radio(
@@ -155,14 +152,14 @@ with st.sidebar:
 
     st.divider()
     st.caption("FQHC Chronic Disease SHAP Dashboard")
-    st.caption("AUC-ROC target: 0.927–0.934")
-    st.caption("Visits in project: 503K")
+    st.caption("Real models trained on 503,799 NAMCS 2024 visits")
+    st.caption("See README.md for full per-model AUC-ROC/F1 table")
 
 # ---------------------------------------------------------------------------
 # Load data
 # ---------------------------------------------------------------------------
 
-data = load_model_and_shap(target_condition=target_condition, n_train=n_train)
+data = load_model_and_shap(target_condition=target_condition)
 
 # ---------------------------------------------------------------------------
 # Page: Overview
@@ -201,15 +198,11 @@ if page == "📊 Overview":
         top10 = data["importance_df"].head(10).copy()
         top10["mean_abs_shap"] = top10["mean_abs_shap"].round(4)
 
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-
         fig, ax = plt.subplots(figsize=(6, 4))
         colors = ["#4fc3f7"] * 10
         ax.barh(top10["feature"][::-1], top10["mean_abs_shap"][::-1], color=colors, alpha=0.85)
         ax.set_xlabel("Mean |SHAP Value|", fontsize=10)
-        ax.set_title(f"Top Features — {target_condition.title()}", fontsize=11)
+        ax.set_title(f"Top Features — {target_condition.replace('_', ' ').title()}", fontsize=11)
         ax.tick_params(labelsize=9)
         fig.patch.set_facecolor("#0e1117")
         ax.set_facecolor("#1e2130")
@@ -228,9 +221,9 @@ if page == "📊 Overview":
         probs = data["pred_probs"]
         fig2, ax2 = plt.subplots(figsize=(6, 4))
         ax2.hist(probs[data["y_test"] == 0], bins=40, alpha=0.6,
-                 label=f"No {target_condition}", color="#66bb6a", density=True)
+                 label=f"No {target_condition.replace('_', ' ')}", color="#66bb6a", density=True)
         ax2.hist(probs[data["y_test"] == 1], bins=40, alpha=0.6,
-                 label=f"Has {target_condition}", color="#ef5350", density=True)
+                 label=f"Has {target_condition.replace('_', ' ')}", color="#ef5350", density=True)
         ax2.set_xlabel("Predicted Probability", fontsize=10)
         ax2.set_ylabel("Density", fontsize=10)
         ax2.set_title("Predicted Risk Distribution by True Label", fontsize=11)
@@ -290,7 +283,7 @@ elif page == "🔍 Global SHAP":
         if i < 5:
             bar.set_color("#e91e63")
     ax.set_xlabel("Mean |SHAP Value|", fontsize=11, color="white")
-    ax.set_title(f"FQHC {target_condition.title()} Model — Global Feature Importance",
+    ax.set_title(f"FQHC {target_condition.replace('_', ' ').title()} Model — Global Feature Importance",
                  fontsize=13, color="white")
     ax.tick_params(labelsize=9, colors="white")
     fig.patch.set_facecolor("#0e1117")
@@ -432,7 +425,7 @@ elif page == "⚖️ Equity Analysis":
         sns.heatmap(top15, annot=True, fmt=".3f", cmap="YlOrRd",
                     linewidths=0.5, ax=ax_eq, cbar_kws={"label": "Mean |SHAP|"})
         ax_eq.set_title(
-            f"SHAP Feature Importance by Race/Ethnicity — {target_condition.title()} Model",
+            f"SHAP Feature Importance by Race/Ethnicity — {target_condition.replace('_', ' ').title()} Model",
             fontsize=12, color="white"
         )
         ax_eq.tick_params(colors="white", labelsize=8)
@@ -532,7 +525,7 @@ elif page == "📈 Population Risk":
     )
     ax_scatter.set_xlabel("Age", color="white")
     ax_scatter.set_ylabel("Predicted Risk", color="white")
-    ax_scatter.set_title(f"Age vs. {target_condition.title()} Risk", color="white")
+    ax_scatter.set_title(f"Age vs. {target_condition.replace('_', ' ').title()} Risk", color="white")
     ax_scatter.tick_params(colors="white")
     fig_scatter.patch.set_facecolor("#0e1117")
     ax_scatter.set_facecolor("#1e2130")

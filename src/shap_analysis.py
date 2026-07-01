@@ -104,12 +104,20 @@ class SHAPAnalyzer:
         except ImportError:
             raise ImportError("shap required: pip install shap")
 
-        logger.info("Initializing SHAP TreeExplainer...")
-        self._explainer = shap.TreeExplainer(
-            self.model,
-            data=shap.sample(self.X_train, min(1000, len(self.X_train))),
-            feature_perturbation="interventional",
-        )
+        from sklearn.linear_model import LogisticRegression
+
+        background = shap.sample(self.X_train, min(1000, len(self.X_train)))
+
+        if isinstance(self.model, LogisticRegression):
+            logger.info("Initializing SHAP LinearExplainer...")
+            self._explainer = shap.LinearExplainer(self.model, background)
+        else:
+            logger.info("Initializing SHAP TreeExplainer...")
+            self._explainer = shap.TreeExplainer(
+                self.model,
+                data=background,
+                feature_perturbation="interventional",
+            )
 
         # Subsample for speed
         if len(self.X_test) > max_samples:
@@ -121,9 +129,13 @@ class SHAPAnalyzer:
         logger.info("Computing SHAP values for %d patients...", len(X_explain))
         self._shap_values = self._explainer.shap_values(X_explain)
 
-        # For binary classifiers, shap_values may be a list [class0, class1]
+        # For binary classifiers, shap_values may come back as a list
+        # [class0, class1] (older shap) or a 3D array (n, features, classes)
+        # (newer shap TreeExplainer). Normalize to the positive class, 2D.
         if isinstance(self._shap_values, list):
             self._shap_values = self._shap_values[1]  # Positive class
+        elif self._shap_values.ndim == 3:
+            self._shap_values = self._shap_values[:, :, 1]
 
         logger.info("SHAP values computed: shape %s", self._shap_values.shape)
         return self._shap_values
@@ -140,6 +152,14 @@ class SHAPAnalyzer:
         }).sort_values("mean_abs_shap", ascending=False).reset_index(drop=True)
         importance_df["rank"] = importance_df.index + 1
         return importance_df
+
+    def _positive_class_base_value(self) -> float:
+        """Normalize expected_value (scalar, list, or array) to the positive-class base value."""
+        ev = self._explainer.expected_value
+        if isinstance(ev, (list, np.ndarray)):
+            ev = np.asarray(ev).ravel()
+            return float(ev[1] if len(ev) > 1 else ev[0])
+        return float(ev)
 
     def get_patient_explanation(
         self, patient_idx: int
@@ -167,9 +187,7 @@ class SHAPAnalyzer:
         return {
             "patient_idx": patient_idx,
             "top_contributors": contributions[:10],
-            "base_value": round(float(self._explainer.expected_value
-                                      if not isinstance(self._explainer.expected_value, list)
-                                      else self._explainer.expected_value[1]), 4),
+            "base_value": round(self._positive_class_base_value(), 4),
             "shap_sum": round(float(shap_row.sum()), 4),
         }
 
@@ -290,11 +308,7 @@ class SHAPAnalyzer:
 
             explanation = shap.Explanation(
                 values=self._shap_values[patient_idx],
-                base_values=(
-                    self._explainer.expected_value
-                    if not isinstance(self._explainer.expected_value, list)
-                    else self._explainer.expected_value[1]
-                ),
+                base_values=self._positive_class_base_value(),
                 data=self.X_test.iloc[patient_idx].values,
                 feature_names=self.feature_names,
             )

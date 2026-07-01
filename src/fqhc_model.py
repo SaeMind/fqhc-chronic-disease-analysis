@@ -1,17 +1,19 @@
 """
 FQHC Chronic Disease — Model & Data
 ======================================
-Generates synthetic FQHC visit data and trains/loads the XGBoost
-chronic disease prediction model for use with the SHAP dashboard.
+Two independent data paths:
 
-If a pre-trained model artifact exists at models/fqhc_model.pkl,
-it is loaded directly. Otherwise a new model is trained on synthetic
-data calibrated to the project's reported metrics:
-  - AUC-ROC: 0.927–0.934
-  - 503,000 visits
-  - Chronic conditions: diabetes, hypertension, COPD, asthma, depression
+1. Real NAMCS pipeline (`load_real_model`) — loads the 5 models actually
+   trained in notebooks/03_predictive_models.ipynb (RandomForest /
+   GradientBoosting / LogisticRegression, saved via joblib) against the
+   real NAMCS 2024 feature schema in data/processed/hc2024_model_features.parquet.
+   This is what the Streamlit dashboard uses.
 
-Used by both the SHAP analyzer and the Streamlit dashboard.
+2. Synthetic demo pipeline (`generate_fqhc_data` / `load_or_train_model`) —
+   an illustrative XGBoost model trained on fabricated clinical features
+   (labs, meds, SDOH) that do not exist in NAMCS. Kept only for
+   tests/test_shap.py, which exercises the generic SHAPAnalyzer interface
+   against a throwaway model. Not used by the live dashboard.
 """
 
 import logging
@@ -217,7 +219,112 @@ def generate_fqhc_data(
 
 
 # ---------------------------------------------------------------------------
-# Model loader / trainer
+# Real NAMCS model loader (used by the live dashboard)
+# ---------------------------------------------------------------------------
+
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REAL_DATA_PATH = os.path.join(_REPO_ROOT, "data", "processed", "hc2024_model_features.parquet")
+REAL_MODELS_DIR = os.path.join(_REPO_ROOT, "models")
+
+# Mirrors the exact feature engineering + train/test split from
+# notebooks/03_predictive_models.ipynb, so predictions and metrics
+# reproduce the README's published AUC/F1 figures.
+REAL_CONDITIONS = {
+    "hypertension":   {"model_file": "hypertension_classifier.pkl", "scaler_file": None},
+    "diabetes":       {"model_file": "diabetes_classifier.pkl", "scaler_file": None},
+    "mental_health":  {"model_file": "mental_health_classifier.pkl", "scaler_file": None},
+    "high_complexity": {"model_file": "high_complexity_predictor.pkl", "scaler_file": None},
+    "multimorbidity": {"model_file": "multimorbidity_predictor.pkl", "scaler_file": "multimorbidity_scaler.pkl"},
+}
+
+
+def _real_dummies(df: pd.DataFrame):
+    race_dummies = pd.get_dummies(df["race_simple"], prefix="race", drop_first=True)
+    season_dummies = pd.get_dummies(df["season"], prefix="season", drop_first=True)
+    return race_dummies, season_dummies
+
+
+def _build_real_features(df: pd.DataFrame, target_condition: str):
+    """Reproduce the exact feature matrix + target used to train each real model."""
+    race_dummies, season_dummies = _real_dummies(df)
+
+    if target_condition in ("hypertension", "diabetes", "mental_health"):
+        base_cols = ["AGE", "sex_binary", "num_diagnoses", "is_weekend"]
+        X = pd.concat([df[base_cols], race_dummies, season_dummies], axis=1)
+        X = X.fillna(X.mean())
+        y = df[target_condition]
+        stratify = None
+        test_size = 0.25
+    elif target_condition == "high_complexity":
+        base_cols = ["AGE", "sex_binary", "diabetes", "hypertension",
+                     "mental_health", "obesity", "substance_use", "is_weekend"]
+        X = pd.concat([df[base_cols], race_dummies, season_dummies], axis=1).fillna(0)
+        y = df["high_complexity"]
+        stratify = y
+        test_size = 0.25
+    elif target_condition == "multimorbidity":
+        base_cols = ["AGE", "sex_binary", "num_diagnoses", "is_weekend", "preventive_visit"]
+        X = pd.concat([df[base_cols], race_dummies, season_dummies], axis=1)
+        X = X.fillna(X.mean())
+        y = df["multimorbidity"]
+        stratify = y
+        test_size = 0.25
+    else:
+        raise ValueError(f"Unknown real condition: {target_condition}")
+
+    return X, y, stratify, test_size
+
+
+def load_real_model(
+    target_condition: str = "hypertension",
+    data_path: str = REAL_DATA_PATH,
+    models_dir: str = REAL_MODELS_DIR,
+) -> Tuple:
+    """
+    Load one of the 5 real NAMCS-trained models (joblib artifacts) and
+    reconstruct the exact train/test split used in
+    notebooks/03_predictive_models.ipynb.
+
+    Returns:
+        (model, X_train, X_test, y_train, y_test, feature_cols, demo_test)
+    """
+    import joblib
+    from sklearn.model_selection import train_test_split
+
+    if target_condition not in REAL_CONDITIONS:
+        raise ValueError(
+            f"'{target_condition}' has no real trained model. "
+            f"Available: {list(REAL_CONDITIONS)}"
+        )
+
+    df = pd.read_parquet(data_path)
+    X, y, stratify, test_size = _build_real_features(df, target_condition)
+    X = X.astype("float64")  # dummy cols are bool; SHAP's tree explainer needs numeric dtype
+    demo = pd.DataFrame({
+        "race_ethnicity": df["race_simple"],
+        "age": df["AGE"],
+    })
+
+    X_train, X_test, y_train, y_test, demo_train, demo_test = train_test_split(
+        X, y, demo, test_size=test_size, random_state=42, stratify=stratify
+    )
+
+    cfg = REAL_CONDITIONS[target_condition]
+    model = joblib.load(os.path.join(models_dir, cfg["model_file"]))
+
+    if cfg["scaler_file"]:
+        scaler = joblib.load(os.path.join(models_dir, cfg["scaler_file"]))
+        X_train = pd.DataFrame(scaler.transform(X_train), columns=X_train.columns, index=X_train.index)
+        X_test = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns, index=X_test.index)
+
+    feature_cols = list(X_train.columns)
+    demo_test = demo_test.reset_index(drop=True)
+
+    return model, X_train, X_test, y_train, y_test, feature_cols, demo_test
+
+
+# ---------------------------------------------------------------------------
+# Synthetic demo model loader / trainer (used only by tests/test_shap.py)
 # ---------------------------------------------------------------------------
 
 def load_or_train_model(

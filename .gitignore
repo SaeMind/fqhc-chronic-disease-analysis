@@ -17,8 +17,14 @@ data/raw/*.sas7bdat
 data/raw/*.csv
 data/raw/*.zip
 
-# Keep processed pickle files
-# data/processed/*.pkl is okay to include if <100MB
+# Full intermediate processed data (~377MB, exceeds GitHub's 100MB limit).
+# Regenerate from data/raw/HC2024_SAS.sas7bdat via the feature-engineering
+# steps in notebooks/01_feature_engineering.ipynb if needed.
+# The trimmed hc2024_model_features.parquet (used by the live dashboard) is
+# small enough (~2MB) and IS committed.
+data/processed/hc2024_processed.pkl
+data/processed/hc2024_raw.pkl
+data/processed/*.csv
 
 # OS
 .DS_Store
