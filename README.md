@@ -104,11 +104,12 @@ fqhc-chronic-disease-analysis/
 
 ### Health Equity Findings
 
-Significant racial/ethnic disparities identified:
-
-- **Hypertension:** Higher rates in Black patients (rate ratio: 1.3x vs White)
-- **Diabetes:** Higher rates in Hispanic patients (rate ratio: 1.4x vs White)
-- **Mental Health:** Lower diagnosis rates in Black/Hispanic patients despite similar prevalence in national studies
+The SHAP-based equity dashboard surfaces how feature attribution varies by
+race/ethnicity across model predictions — useful for auditing whether the
+model relies differently on certain features for different demographic
+groups. A dedicated prevalence-based disparity analysis (raw diagnosis
+rates by race/ethnicity) is a planned addition; current SHAP-based equity
+gaps are not disease-rate disparities and should not be interpreted as such.
 
 ## Installation & Usage
 
