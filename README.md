@@ -14,7 +14,6 @@ This project analyzes 503,799 health center visits from the CDC's 2024 National 
 - **Hypertension Prediction:** 0.927 AUC-ROC, 61.6% F1-score
 - **Multimorbidity Prediction:** 0.934 AUC-ROC, 70.9% F1-score
 - **High Complexity Visits:** 0.835 AUC-ROC, 72.6% F1-score
-- **National Savings Potential:** $11.7 billion through three evidence-based intervention programs
 
 ---
 
@@ -110,17 +109,6 @@ Significant racial/ethnic disparities identified:
 - **Hypertension:** Higher rates in Black patients (rate ratio: 1.3x vs White)
 - **Diabetes:** Higher rates in Hispanic patients (rate ratio: 1.4x vs White)
 - **Mental Health:** Lower diagnosis rates in Black/Hispanic patients despite similar prevalence in national studies
-
-### Financial Impact (National FQHC Sector)
-
-| Intervention Program | Investment | Net Savings | ROI |
-|---|---|---|---|
-| Diabetes Early Intervention | $1.9B | $7.3B | 3.80x |
-| Hypertension Control | $1.4B | $3.4B | 2.36x |
-| Integrated Mental Health | $4.5B | $1.0B | 0.22x |
-| **TOTAL** | **$7.9B** | **$11.7B** | **1.48x** |
-
----
 
 ## Installation & Usage
 
