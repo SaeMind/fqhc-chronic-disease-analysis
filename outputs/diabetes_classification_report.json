@@ -1,0 +1,72 @@
+{
+  "report": "diabetes classifier, test split of the committed NAMCS HC 2024 feature extract",
+  "target": "diabetes",
+  "model": {
+    "path": "models/diabetes_classifier.pkl",
+    "sha256": "fb8a8a147d2cb01bc3f0fc21bf8c717a9e6615eb00ceafe72381d415f022002f",
+    "tracked_in_git": true,
+    "class": "RandomForestClassifier",
+    "class_weight": "balanced",
+    "feature_names_in": [
+      "AGE",
+      "sex_binary",
+      "num_diagnoses",
+      "is_weekend",
+      "race_Hispanic",
+      "race_Other",
+      "race_White",
+      "season_Spring",
+      "season_Summer",
+      "season_Winter"
+    ]
+  },
+  "data": {
+    "path": "data/processed/hc2024_model_features.parquet",
+    "sha256": "8c7b5b6efe3fbf159562a9834cef990ae4b8cfb12eafd5d55d67de54f35bb1ab",
+    "tracked_in_git": true,
+    "rows": 503799
+  },
+  "split": {
+    "test_size": 0.25,
+    "random_state": 42,
+    "stratify": null,
+    "n_train": 377849,
+    "n_test": 125950,
+    "source": "notebooks/03_predictive_models.ipynb"
+  },
+  "decision_threshold": "model.predict (probability 0.5)",
+  "metrics": {
+    "recall": 0.875211962386311,
+    "precision": 0.28328717910336054,
+    "f1": 0.4280302316376727,
+    "auc_roc": 0.8844334089125382
+  },
+  "confusion_matrix": {
+    "labels": [
+      0,
+      1
+    ],
+    "layout": "rows = actual, columns = predicted",
+    "matrix": [
+      [
+        84248,
+        28728
+      ],
+      [
+        1619,
+        11355
+      ]
+    ],
+    "tn": 84248,
+    "fp": 28728,
+    "fn": 1619,
+    "tp": 11355
+  },
+  "positives_in_test": 12974,
+  "environment": {
+    "python": "3.14.2",
+    "scikit_learn": "1.8.0",
+    "pandas": "3.0.0",
+    "numpy": "2.4.1"
+  }
+}

@@ -244,3 +244,9 @@ summary = analyzer.run(output_dir="results/shap/", demographics_df=demo_test)
 ```bash
 python -m pytest tests/test_shap.py -v
 ```
+
+## Verification outputs
+
+- `scripts/report_diabetes_classification.py` loads `models/diabetes_classifier.pkl` and `data/processed/hc2024_model_features.parquet`, rebuilds the features the way `notebooks/03_predictive_models.ipynb` does, applies that notebook's split (`test_size=0.25`, `random_state=42`), and writes `outputs/diabetes_classification_report.json`.
+- The JSON records recall, precision, F1, AUC-ROC, the confusion matrix, the split parameters, the sha256 of the model file and of the feature file, whether each is tracked in git, and the library versions used.
+- Regenerate it from the repository root with `python scripts/report_diabetes_classification.py`. The model file is a pickle; only run this on a copy of the repository you trust.
