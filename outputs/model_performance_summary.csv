@@ -1,6 +1,0 @@
-Model,Algorithm,F1 Score,AUC-ROC,Business Impact
-Diabetes Classifier,Random Forest,0.4280302316376727,0.8844334089125382,Early intervention targeting
-Hypertension Classifier,Random Forest,0.6219447638866071,0.9280073347853648,Blood pressure management
-Mental Health Classifier,Random Forest,0.5201956711849585,0.8529109748797727,Mental health screening
-High Complexity Predictor,Gradient Boosting,0.726332650702569,0.8349593938603983,Resource allocation planning
-Multimorbidity Predictor,Logistic Regression,0.709296514963632,0.9338808611179419,Care coordination priority
