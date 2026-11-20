@@ -1,0 +1,83 @@
+{
+  "uds": {
+    "url": "https://data.hrsa.gov/DataDownload/StaticDocuments/H80-2025.xlsx",
+    "documentation": "https://data.hrsa.gov/data/download",
+    "vintage": "2025 H80",
+    "use": "Table 7, health center roster",
+    "sha256": "1f8a7503f54892163a32083ec46c59f4695c9ad6c0e37a9c458fc88f7111fbfb",
+    "bytes": 29059572,
+    "acquired": "2026-11-19"
+  },
+  "sites": {
+    "url": "https://data.hrsa.gov/DataDownload/DD_Files/Health_Center_Service_Delivery_and_LookAlike_Sites.csv",
+    "documentation": "https://data.hrsa.gov/topics/health-centers/uds",
+    "vintage": "2026-11-18 snapshot",
+    "use": "County FIPS, site ID and site classifications",
+    "sha256": "41aa68239f86101cbba6a98c1a879835034b048defda73dd419cc8fc894d3abd",
+    "bytes": 14261783,
+    "acquired": "2026-11-19"
+  },
+  "places": {
+    "url": "https://data.cdc.gov/resource/d3i6-k6z5.csv?$limit=5000&$select=countyfips,countyname,stateabbr,diabetes_crudeprev,diabetes_crude95ci",
+    "documentation": "https://data.cdc.gov/500-Cities-Places/PLACES-County-Data-GIS-Friendly-Format-2024-releas/d3i6-k6z5",
+    "vintage": "2024 release",
+    "use": "Crude diabetes prevalence and 95% interval",
+    "sha256": "0f56df9b4ff5d690bb8ebda3b9a93a2a8f139d71f27f68538a9241f21ee0fad0",
+    "bytes": 141477,
+    "acquired": "2026-11-19"
+  },
+  "acs": {
+    "url": "https://www2.census.gov/programs-surveys/acs/summary_file/2023/table-based-SF/data/5YRData/acsdt5y2023-b01003.dat",
+    "documentation": "https://data.census.gov/table/ACSDT5Y2023.B01003",
+    "vintage": "2019\u20132023 ACS 5-year",
+    "use": "B01003 total population estimate",
+    "sha256": "24ae3f523b4c54332ce0a71ba534569685a8a729056f975915d860d1eb943565",
+    "bytes": 18311997,
+    "acquired": "2026-11-19"
+  },
+  "svi": {
+    "url": "https://svi2.cdc.gov/webapi/Documents/download?year=2022&type=csv&category=states_counties&name=SVI_2022_US_COUNTY",
+    "documentation": "https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html",
+    "vintage": "2022 national county",
+    "use": "National overall percentile RPL_THEMES",
+    "sha256": "bc47d244153e359d5c09f621a4bf344a1e593159c16fbd3c28a15461b70a6c0f",
+    "bytes": 2301480,
+    "acquired": "2026-11-19"
+  },
+  "demo": {
+    "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_DEMO.xpt",
+    "documentation": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_DEMO.htm",
+    "vintage": "2017\u2013March 2020",
+    "use": "Age, sex, pregnancy status, MEC weights and design IDs",
+    "sha256": "2e46c6c26bf77cd8989f64011ace12cbf42c0f3e03414eb59acc5328c8f87913",
+    "bytes": 3614720,
+    "acquired": "2026-11-19"
+  },
+  "a1c": {
+    "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_GHB.xpt",
+    "documentation": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_GHB.htm",
+    "vintage": "2017\u2013March 2020",
+    "use": "LBXGH cross-sectional marker",
+    "sha256": "dac9e423f56041c2ec46486cb16be16d3347e0a81a575985882ffad5a60e1195",
+    "bytes": 167600,
+    "acquired": "2026-11-19"
+  },
+  "bmi": {
+    "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_BMX.xpt",
+    "documentation": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_BMX.htm",
+    "vintage": "2017\u2013March 2020",
+    "use": "Measured BMI",
+    "sha256": "7038d0da3169420a4a3cbaec09ac586a701b38e1c7b925431b60e13ac24fed66",
+    "bytes": 2520640,
+    "acquired": "2026-11-19"
+  },
+  "diq": {
+    "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_DIQ.xpt",
+    "documentation": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_DIQ.htm",
+    "vintage": "2017\u2013March 2020",
+    "use": "Self-reported diabetes status",
+    "sha256": "79153f799fc2171792771c4aa250029c62807f14915f1f81405b03233b1e5ae3",
+    "bytes": 3361520,
+    "acquired": "2026-11-19"
+  }
+}

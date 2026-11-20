@@ -1,0 +1,44 @@
+{
+  "G1": "All pinned inputs matched",
+  "G2": {
+    "PLACES counties": 3144,
+    "counties with ACS and SVI": 3144,
+    "counties missing ACS": 0,
+    "counties missing SVI": 0,
+    "eligible sites": 13161,
+    "matched sites": 13160
+  },
+  "G3": {
+    "Hypertension control": {
+      "roster": 1356,
+      "reportable": 1354,
+      "benchmarked": 1354,
+      "eligible": 1354
+    },
+    "Poor glycemic status or missing assessment": {
+      "roster": 1356,
+      "reportable": 1345,
+      "benchmarked": 1344,
+      "eligible": 1344
+    }
+  },
+  "G4": {
+    "demographic records": 15560,
+    "diq file records": 14986,
+    "bmi file records": 14300,
+    "a1c file records": 10409,
+    "eligible before complete-case filter": 7723,
+    "complete cases": 6646,
+    "train": 4527,
+    "test": 2119,
+    "test clusters": 15,
+    "train positives": 170,
+    "test positives": 106
+  },
+  "NHANES held-out metrics": {
+    "ROC AUC": 0.74831194225192,
+    "Average precision": 0.07327297885406125,
+    "Brier score": 0.03030990858902865,
+    "Weighted positive share": 0.03163979008370385
+  }
+}
